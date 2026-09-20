@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.tictactoegame.navigation.AppRoutes
-import com.example.tictactoegame.utils.SideEffects
+import com.example.tictactoegame.core.utils.SideEffects
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

@@ -4,6 +4,7 @@ package com.example.tictactoegame.features.main
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,16 +24,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.tictactoegame.components.AppButton
-import com.example.tictactoegame.components.AppDialog
-import com.example.tictactoegame.components.AppScaffold
-import com.example.tictactoegame.components.AppText
-import com.example.tictactoegame.utils.SideEffects
+import com.example.tictactoegame.R
+import com.example.tictactoegame.core.components.AppButton
+import com.example.tictactoegame.core.components.AppDialog
+import com.example.tictactoegame.core.components.AppScaffold
+import com.example.tictactoegame.core.components.AppText
+import com.example.tictactoegame.core.utils.SideEffects
+import com.example.tictactoegame.ui.theme.CustomBlue
+import com.example.tictactoegame.ui.theme.CustomRed
 
 @Composable
 fun MainScreen(
@@ -62,7 +72,10 @@ fun MainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp),
+                .paint(
+                    painter = painterResource(R.drawable.app_bg_variant),
+                    contentScale = ContentScale.Crop
+                ),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -73,47 +86,66 @@ fun MainScreen(
                 contentAlignment = Alignment.Center
             ) {
                 AppText(
+                    modifier = Modifier
+                        .background(Color(0xFF111510))
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
                     text = "TicTacToe",
-                    style = MaterialTheme.typography.displayMedium
+                    style = MaterialTheme.typography.displayLarge,
+                    fontWeight = FontWeight.W900,
+                    color = Color.White
                 )
             }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
                     .weight(0.7f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 AppButton(
                     modifier = Modifier
-                        .fillMaxWidth(0.7f)
-                        .size(70.dp),
+                        .height(70.dp),
                     text = "Play with Friend",
+                    shape = MaterialTheme.shapes.extraLarge,
                     onClick = {
                         navigateToGame(false)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        containerColor = CustomBlue,
+                        contentColor = Color.White
                     ),
-                    shape = MaterialTheme.shapes.medium,
-                    textStyle = MaterialTheme.typography.headlineMedium
+                    textStyle = MaterialTheme.typography.titleLarge,
+                    leadingIcon = {
+                        androidx.compose.material3.Icon(
+                            painter = painterResource(R.drawable.buddy),
+                            contentDescription = "Bot Icon",
+                            modifier = Modifier.size(64.dp)
+                        )
+                    }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 AppButton(
                     modifier = Modifier
-                        .fillMaxWidth(0.7f)
-                        .size(70.dp),
+                        .height(70.dp),
                     text = "Play with Bot",
                     onClick = {
                         navigateToGame(true)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        containerColor = CustomRed,
+                        contentColor = Color.White
                     ),
-                    shape = MaterialTheme.shapes.medium,
-                    textStyle = MaterialTheme.typography.headlineMedium
+                    shape = MaterialTheme.shapes.extraLarge,
+                    textStyle = MaterialTheme.typography.titleLarge,
+                    leadingIcon = {
+                        androidx.compose.material3.Icon(
+                            painter = painterResource(R.drawable.bot),
+                            contentDescription = "Bot Icon",
+                            modifier = Modifier.size(64.dp)
+                        )
+                    }
                 )
             }
         }

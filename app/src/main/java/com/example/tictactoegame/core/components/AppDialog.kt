@@ -1,4 +1,4 @@
-package com.example.tictactoegame.components
+package com.example.tictactoegame.core.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning

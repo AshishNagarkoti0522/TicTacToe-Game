@@ -2,7 +2,7 @@ package com.example.tictactoegame.features.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tictactoegame.utils.SideEffects
+import com.example.tictactoegame.core.utils.SideEffects
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

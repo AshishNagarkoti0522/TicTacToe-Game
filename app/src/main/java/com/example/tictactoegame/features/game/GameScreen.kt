@@ -36,20 +36,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tictactoegame.R
-import com.example.tictactoegame.components.AppButton
-import com.example.tictactoegame.components.AppDialog
-import com.example.tictactoegame.components.AppLoaderLottie
-import com.example.tictactoegame.components.AppScaffold
-import com.example.tictactoegame.components.AppText
-import com.example.tictactoegame.ui.theme.TicTacToeGameTheme
-import com.example.tictactoegame.utils.SideEffects
+import com.example.tictactoegame.core.components.AppButton
+import com.example.tictactoegame.core.components.AppDialog
+import com.example.tictactoegame.core.components.AppLoaderLottie
+import com.example.tictactoegame.core.components.AppScaffold
+import com.example.tictactoegame.core.components.AppText
+import com.example.tictactoegame.core.utils.SideEffects
+import com.example.tictactoegame.ui.theme.CustomBlue
+import com.example.tictactoegame.ui.theme.CustomRed
 
 @Composable
 fun GameScreen(
@@ -84,24 +86,53 @@ fun GameScreen(
         if (state.switcher) stringResource(R.string.x_s_turn) else stringResource(R.string.o_s_turn)
     }
 
-    AppScaffold{ innerPadding ->
+    val textAlign = if (state.winner != 0) {
+        when (state.winner) {
+            1 -> Alignment.TopStart
+            -1 -> Alignment.TopEnd
+            else -> Alignment.TopCenter
+        }
+    } else {
+        if (state.switcher) Alignment.TopStart else Alignment.TopEnd
+    }
+
+    // Combine text and alignment into a single state for smooth transitions
+    val animationState = turnText to textAlign
+
+    AppScaffold { innerPadding ->
         Box(
             modifier = modifier
                 .fillMaxSize()
+                .background(Color(0xFF1E1E22))
                 .padding(innerPadding)
                 .padding(horizontal = 32.dp),
             contentAlignment = Alignment.Center
         ) {
+
+            // Outer modifier is fixed, alignment handled inside animation
             AnimatedContent(
-                targetState = turnText,
+                targetState = animationState,
                 label = "Turn Text Animation",
                 modifier = Modifier
+                    .fillMaxWidth()
                     .align(Alignment.TopCenter)
-            ) { targetText ->
-                AppText(
-                    text = targetText,
-                    style = MaterialTheme.typography.displaySmall
-                )
+                    .padding(top = 32.dp)
+            ) { (targetText, targetAlign) ->
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = targetAlign
+                ) {
+                    AppText(
+                        text = targetText,
+                        style = MaterialTheme.typography.displayLarge,
+                        color = when (targetText) {
+                            stringResource(R.string.x_s_turn) -> CustomRed
+                            stringResource(R.string.o_s_turn) -> CustomBlue
+                            else -> Color.Green
+                        },
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(90.dp))
@@ -110,7 +141,7 @@ fun GameScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 for (i in 0..2) {
                     AppRow(
@@ -129,20 +160,23 @@ fun GameScreen(
 
             if (state.winner == 1 || state.winner == -1) {
                 AppLoaderLottie(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    lottieRes = R.raw.trophy
+                    modifier = Modifier.fillMaxSize(),
+                    lottieRes = R.raw.trophy,
+                    iterations = 1,
+                    contentScale = ContentScale.Fit
                 )
                 AppLoaderLottie(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    lottieRes = R.raw.confetti
+                    modifier = Modifier.fillMaxSize(),
+                    lottieRes = R.raw.confetti,
+                    iterations = 1,
+                    contentScale = ContentScale.Crop
                 )
             }
 
             AnimatedVisibility(
                 modifier = Modifier
                     .padding(horizontal = 32.dp)
+                    .padding(bottom = 32.dp)
                     .align(Alignment.BottomCenter),
                 visible = state.restartButtonVisibility,
                 enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 }),
@@ -157,10 +191,10 @@ fun GameScreen(
                         viewModel.onEvent(GameContract.Event.ResetGame)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
+                        containerColor = CustomBlue,
+                        contentColor = Color.White
                     ),
-                    shape = MaterialTheme.shapes.medium,
+                    shape = RoundedCornerShape(12.dp),
                     textStyle = MaterialTheme.typography.displayMedium
                 )
             }
@@ -196,8 +230,8 @@ fun AppRow(
     isIndex3Present: Boolean = false
 ) {
     Row(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.onSurfaceVariant)
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         for (i in 0..2) {
             val isPresent = when (i) {
@@ -218,14 +252,23 @@ fun AppRow(
                 else -> click3
             }
 
+            // Dark gray box color from screenshot
+            val defaultBoxColor = Color(0xFF28282D)
             val animatedContainerColor by animateColorAsState(
-                targetValue = if (isPresent) Color.Green else MaterialTheme.colorScheme.surface,
+                targetValue = if (isPresent) Color(0xFF388E3C) else defaultBoxColor,
                 animationSpec = tween(durationMillis = 600),
                 label = "Container Color Animation"
             )
 
+            // X will be white, O will be blue
+            val symbolColor = when (buttonText.uppercase()) {
+                "X" -> CustomRed
+                "O" -> CustomBlue // Bright blue
+                else -> Color.Transparent
+            }
+
             val animatedContentColor by animateColorAsState(
-                targetValue = if (isPresent) Color.White else MaterialTheme.colorScheme.primary,
+                targetValue = if (isPresent) Color.White else symbolColor,
                 animationSpec = tween(durationMillis = 600),
                 label = "Content Color Animation"
             )
@@ -235,23 +278,14 @@ fun AppRow(
                 onClick = clickAction,
                 modifier = Modifier
                     .weight(1f)
-                    .aspectRatio(1f)
-                    .padding(0.5.dp),
+                    .aspectRatio(1f),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = animatedContainerColor,
                     contentColor = animatedContentColor
                 ),
-                shape = RoundedCornerShape(0.dp),
+                shape = RoundedCornerShape(20.dp), // Increased roundness
                 textStyle = MaterialTheme.typography.displayLarge
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TicTacToeGamePreview() {
-    TicTacToeGameTheme {
-        GameScreen()
     }
 }

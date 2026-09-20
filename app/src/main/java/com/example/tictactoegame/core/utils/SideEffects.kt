@@ -1,4 +1,4 @@
-package com.example.tictactoegame.utils
+package com.example.tictactoegame.core.utils
 
 sealed interface SideEffects {
     data class ShowToast(val message : String) : SideEffects
