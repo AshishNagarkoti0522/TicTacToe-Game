@@ -1,60 +1,25 @@
-# 🎮 Tic Tac Toe - Jetpack Compose
+# TicTacToe-Android
 
-A Tic Tac Toe game built using **Jetpack Compose** with focus on 
-**state management, MVVM, and UI animations**.
+A modern, interactive Tic-Tac-Toe game built entirely with Kotlin and Jetpack Compose.
 
----
+## Features
+* **Two Play Modes:** 
+  * **Play with Bot:** Challenge the built-in AI bot in single-player mode.
+  * **Play with Friend:** Classic 2-player local pass-and-play mode.
+* **Modern UI/UX:** Fully built with Jetpack Compose featuring smooth color transitions and animated game states.
+* **Winning Animations:** Integrated Lottie animations (confetti and trophies) for a rewarding victory screen.
+* **Smart Game Logic:** Handles win detection, draw states, and bot move generation automatically.
 
-## 🚀 What I Focused On
+## Tech Stack
+* **Language:** Kotlin
+* **UI Toolkit:** Jetpack Compose, Material Design 3
+* **Architecture:** MVVM (Model-View-ViewModel)
+* **Dependency Injection:** Dagger Hilt
+* **Navigation:** Compose Navigation
+* **Animations:** Lottie for Compose
+* **Asynchronous Programming:** Coroutines & StateFlow
 
-- State handling using `mutableStateListOf`
-- Game logic (win + draw detection)
-- Clean separation using **ViewModel (MVVM)**
-- Maintaining **Material 3 design consistency**
-
----
-
-## ✨ UI & Animations
-
-- Animated turn text
-- Winning cells highlight animation
-- Restart button with visibility animation
-- Lottie animations for win state
-
----
-
-## 🧠 Game Logic
-
-- Board uses integer mapping:
-  - `0 → empty`
-  - `1 → X`
-  - `-1 → O`
-- Winning combinations checked after each move
-- Winning path stored to highlight UI
-- Draw detection when board is full
-
----
-
-## 🛠 Tech Stack
-
-- Kotlin
-- Jetpack Compose
-- MVVM
-- Material 3
-- Lottie
-
----
-
-## 💡 Note
-
-This project was built as a **learning project** to improve:
-- Compose UI structuring
-- State management
-- Animation usage
-
----
-
-## 📂 Structure
-
-view/ → UI (Compose)  
-viewmodel/ → Game logic  
+## How to Run
+1. Clone this repository.
+2. Open the project in Android Studio.
+3. Build and run the app on an emulator or physical Android device.
