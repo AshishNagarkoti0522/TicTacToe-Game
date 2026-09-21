@@ -26,9 +26,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.tictactoegame.R
 import com.example.tictactoegame.core.components.AppButton
 import com.example.tictactoegame.core.components.AppDialog
+import com.example.tictactoegame.core.components.AppIconButton
 import com.example.tictactoegame.core.components.AppLoaderLottie
 import com.example.tictactoegame.core.components.AppScaffold
 import com.example.tictactoegame.core.components.AppText
@@ -184,7 +187,7 @@ fun GameScreen(
             ) {
                 AppButton(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(0.7f)
                         .size(70.dp),
                     text = stringResource(R.string.restart),
                     onClick = {
@@ -196,6 +199,22 @@ fun GameScreen(
                     ),
                     shape = RoundedCornerShape(12.dp),
                     textStyle = MaterialTheme.typography.displayMedium
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = 32.dp)
+            ) {
+                AppIconButton(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                    contentDescription = "Back",
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    onClick = { viewModel.onEvent(GameContract.Event.ClickExit) },
+                    animateOnClick = true
                 )
             }
         }

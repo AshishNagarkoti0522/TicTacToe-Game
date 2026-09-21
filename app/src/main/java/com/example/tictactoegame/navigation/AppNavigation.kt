@@ -1,8 +1,10 @@
 package com.example.tictactoegame.navigation
 
+import android.app.Activity
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
@@ -29,9 +31,10 @@ fun AppNavigation() {
     ) {
         composable<AppRoutes.Main> {
             val vm: MainViewModel = hiltViewModel()
+            val activity = LocalContext.current as? Activity
             MainScreen(
                 viewModel = vm,
-                onBackClick = { navController.popBackStackSafe() },
+                onBackClick = { activity?.finish() },
                 navigateToGame = { isSinglePlayer ->
                     navController.navigateSafe(AppRoutes.Game(isSinglePlayer))
                 }
